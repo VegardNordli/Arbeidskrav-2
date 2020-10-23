@@ -1,0 +1,78 @@
+---
+title: "Arbeidskrav 2"
+author: "Vegard N"
+date: "10/23/2020"
+output: html_document
+---
+##HYPOTESE
+
+Null-hypotese: det vil ikke være noen forskjell i testosteronnivå på de to gruppene etter intervensjonen
+
+Hypotese: Det vil være en mindre forskjell på testonivå hos HIGH responders og LOW responders etter intervensjonen, hvor HIGH responders vil ha noe høyere nivå.
+
+#### Laster inn nødvendige pakker
+
+Pakken tidyverse inneholder de pakkene som trengs for å løse oppgaven. I tillegg til dette lastes datafilen ned og legges inn i snarveien "hypertrophy 1" ved bruk av read_csv funksjonen.
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+
+download.file(url = "https://ndownloader.figstatic.com/files/14702420", destfile = "./data/hypertrophy1.csv")
+
+hypertrophy1 <- read_csv("./data/hypertrophy1.csv")
+```
+
+
+
+#### Velger ut ønsket variabel
+
+Videre henter jeg ut ønsket variabel fra datasettet, i dette tilfellet testosteronverdier. Jeg lager en ny snarvei kalt "dat1" og ved hjelp av selectfunksjonen kan jeg velge ut ønskede variabler. Ved bruk av filterfunksjonen fjerner jeg na-målinger fra variablene CLUSTER og T3T1__TESTOSTERONE_ngdl.
+Videre kjører jeg en t-test og denne t-testen legges i snarveien "ttest".
+```{r, message=FALSE, warning=FALSE}
+dat1 <- hypertrophy1 %>%
+  select(SUB_ID, CLUSTER, T3T1__TESTOSTERONE_ngdl)%>%
+  filter(!is.na(CLUSTER),
+         !is.na(T3T1__TESTOSTERONE_ngdl))
+
+
+t.test(T3T1__TESTOSTERONE_ngdl~CLUSTER, data = dat1)
+
+
+ttest <- t.test(T3T1__TESTOSTERONE_ngdl~CLUSTER, data=dat1)
+
+
+
+```
+
+
+#### Kode resultater fra T-test
+
+Dataene som kom fram fra t-testen legges inn i snarveier slik at de enkelt kan benyttes senere.
+```{r}
+t <- round(ttest$statistic, 2)
+df <- round(ttest$parameter, 1)
+p <- round(ttest$p.value, 3)
+estimate <- round(ttest$estimate)
+cil <- round(ttest$conf.int[1], 1)
+ciu <- round(ttest$conf.int[2], 1)
+
+
+```
+
+
+
+#### Lager en figur
+
+ved hjelp av funksjonen ggplot kan vi lage en figur som sammenligner gjennomsnittsresultatet hos HIGH responders med LOW responders 
+
+```{r, warning=FALSE, message=FALSE}
+dat1%>%
+  ggplot(aes(CLUSTER, T3T1__TESTOSTERONE_ngdl)) + geom_boxplot()
+```
+
+
+### KONKLUSJON
+
+Vi konkluderer med at HIGH ikke skiller seg fra LOW i testo-endring fra T1 til T3
+(mean difference, `r estimate`,95%CI [`r cil`, `r ciu`]; t(`r df`) = `r t`, p = `r p`)
+Dette betyr at null-hypotesen som ble laget på forhånd stemmer. 
+Siden p-verdien er 0.4719 er dette sannsynligheten for å komme frem til dette resultatet siden null-hypotesen stemmer.
