@@ -3,15 +3,17 @@ title: "Arbeidskrav 2"
 author: "Vegard N"
 date: "10/23/2020"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
-##HYPOTESE
-
+## HYPOTESE
+<!-- For the final report, add a section that explains why you think your hypothesis will be true.  -->
 Null-hypotese: det vil ikke være noen forskjell i testosteronnivå på de to gruppene etter intervensjonen
 
 Hypotese: Det vil være en mindre forskjell på testonivå hos HIGH responders og LOW responders etter intervensjonen, hvor HIGH responders vil ha noe høyere nivå.
 
 #### Laster inn nødvendige pakker
-
+<!-- For the final report, maybe write it more like a method section in a paper.  -->
 Pakken tidyverse inneholder de pakkene som trengs for å løse oppgaven. I tillegg til dette lastes datafilen ned og legges inn i snarveien "hypertrophy 1" ved bruk av read_csv funksjonen.
 ```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
@@ -75,4 +77,6 @@ dat1%>%
 Vi konkluderer med at HIGH ikke skiller seg fra LOW i testo-endring fra T1 til T3
 (mean difference, `r estimate`,95%CI [`r cil`, `r ciu`]; t(`r df`) = `r t`, p = `r p`)
 Dette betyr at null-hypotesen som ble laget på forhånd stemmer. 
+<!-- We are actually not proving the null-hypothesis, we simply does not have much evidence against it! Think about how you can update the scentence above  -->
 Siden p-verdien er 0.4719 er dette sannsynligheten for å komme frem til dette resultatet siden null-hypotesen stemmer.
+
